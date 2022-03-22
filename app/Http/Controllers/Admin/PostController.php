@@ -37,6 +37,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
+
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -126,6 +127,11 @@ class PostController extends Controller
         $request->validate($this->validation);
 
         $form_data = $request->all();
+
+        if (isset($form_data['image'])) {
+            $img_path = Storage::put('uploads', $form_data['image']);
+            $form_data['image'] = $img_path;
+        }
 
         // if ($post->title == $form_data['title']) {
         //     $slug = $post->slug;
