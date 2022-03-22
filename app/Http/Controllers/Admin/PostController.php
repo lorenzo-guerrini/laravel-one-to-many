@@ -14,6 +14,17 @@ class PostController extends Controller
         'content' => 'required',
     ];
 
+    protected function getSlug($title = "", $id = "")
+    {
+        $tmpSlug = Str::slug($title);
+        $count = 1;
+        while (Post::where('slug', $tmpSlug)->where('id', '!=', $id)->first()) {
+            $tmpSlug = Str::slug($title) . "-" . $count;
+            $count++;
+        }
+        return $tmpSlug;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,20 +58,22 @@ class PostController extends Controller
 
         $form_data = $request->all();
 
-        $slug = Str::slug($form_data['title']);
-        $count = 1;
-        while (Post::where('slug', $slug)->first()) {
-            $slug = Str::slug($form_data['title']) . "-" . $count;
-            $count++;
-        }
+        // $slug = Str::slug($form_data['title']);
+        // $count = 1;
+        // while (Post::where('slug', $slug)->first()) {
+        //     $slug = Str::slug($form_data['title']) . "-" . $count;
+        //     $count++;
+        // }
 
-        $form_data['slug'] = $slug;
+        // $form_data['slug'] = $slug;
+        $form_data['slug'] = $this->getSlug($form_data["title"]);
+
         $new_post = new Post();
 
         $new_post->fill($form_data);
         $new_post->save();
 
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->with(['msg' => '<div class="alert alert-success" role="alert">Comic succefully added</div>']);
     }
 
     /**
@@ -102,20 +115,21 @@ class PostController extends Controller
 
         $form_data = $request->all();
 
-        if ($post->title == $form_data['title']) {
-            $slug = $post->slug;
-        } else {
-            $slug = Str::slug($form_data['title']);
-            $count = 1;
-            while (Post::where('slug', $slug)->where('id', '!=', $post->id)->first()) {
-                $slug = Str::slug($form_data['title']) . "-" . $count;
-                $count++;
-            }
-        }
-        $form_data['slug'] = $slug;
+        // if ($post->title == $form_data['title']) {
+        //     $slug = $post->slug;
+        // } else {
+        //     $slug = Str::slug($form_data['title']);
+        //     $count = 1;
+        //     while (Post::where('slug', $slug)->where('id', '!=', $post->id)->first()) {
+        //         $slug = Str::slug($form_data['title']) . "-" . $count;
+        //         $count++;
+        //     }
+        // }
+        // $form_data['slug'] = $slug;
+        $form_data["slug"] = ($post->title == $form_data['title']) ? $post->slug : $this->getSlug($form_data["title"], $post->id);
 
         $post->update($form_data);
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->with(['msg' => '<div class="alert alert-success" role="alert">Comic succefully updated</div>']);
     }
 
     /**
@@ -127,6 +141,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        return redirect()->route('admin.posts.index');
+
+        return redirect()->route('admin.posts.index')->with(['msg' => '<div class="alert alert-success" role="alert">Comic succefully deleted</div>']);
     }
 }

@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Boolpress - @yield('title')</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -56,7 +56,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">
+                                                    document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
 
@@ -72,41 +72,33 @@
 
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar py-4">
-                <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('admin.home') }}">Dashboard</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.posts.index') }}">Posts</a>
-                        </li>
-
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" href="#">Users</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Categories</a>
-                        </li>
-
-                        <li class=" nav-item">
-                            <a class="nav-link" href="#">Tags</a>
-                        </li> --}}
-
-                    </ul>
-                </div>
-            </nav>
+            <div class="col-md-2 d-none d-md-block sidebar py-4 p-3" style="width: 280px;">
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ route('admin.home') }}"
+                            class="nav-link {{ request()->is('admin') ? 'active' : '' }}">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.posts.index') }}"
+                            class="nav-link {{ request()->is('admin/posts') ? 'active' : '' }}">Posts</a>
+                    </li>
+                </ul>
+            </div>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 py-4">
-                @yield('content')
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            {!! session()->get('msg') !!}
+                            <h1 class="mb-3">@yield('title')</h1>
+                        </div>
+                        @yield('content')
+                    </div>
+                </div>
             </main>
 
         </div>
     </div>
-
 
 </body>
 

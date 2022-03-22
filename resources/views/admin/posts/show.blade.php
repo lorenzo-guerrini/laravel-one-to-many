@@ -1,16 +1,22 @@
 @extends('layouts.admin')
 
+@section('title')
+    {{ $post->title }}
+@endsection
+
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <ul>
-                    <li>ID: {{ $post->id }}</li>
-                    <li>TITLE: {{ $post->title }}</li>
-                    <li>SLUG: {{ $post->slug }}</li>
-                    <li>CONTENT: {{$post->content}}</li>
-                </ul>
-            </div>
+    <div class="col-md-12">
+        <div class="pb-3">
+            <a href="{{ route('admin.posts.index') }}" class="btn btn-primary">Back</a>
         </div>
+
+        <ul>
+            <li><strong>ID: </strong>{{ $post->id }}</li>
+            <li><strong>Title: </strong>{{ $post->title }}</li>
+            <li><strong>Slug: </strong>{{ $post->slug }}</li>
+            <li><strong>Created at: </strong>{{ $post->created_at }}</li>
+            <li><strong>Updated at: </strong>{{ $post->updated_at }}</li>
+            <li><strong>Content: </strong><br>{{ $post->content }}</li>
+        </ul>
     </div>
 @endsection
