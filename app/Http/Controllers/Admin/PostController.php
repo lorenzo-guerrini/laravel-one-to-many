@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Post;
 use App\Category;
@@ -14,6 +15,7 @@ class PostController extends Controller
         'title' => 'required|max:255',
         'content' => 'required',
         'category_id' => 'nullable|exists:categories,id',
+        'image' => 'nullable|image|mimes:jpeg,bmp,png|max:2040'
     ];
 
     protected function getSlug($title = "", $id = "")
@@ -62,6 +64,11 @@ class PostController extends Controller
 
         $form_data = $request->all();
 
+        if (isset($form_data['image'])) {
+            $img_path = Storage::put('uploads', $form_data['image']);
+            $form_data['image'] = $img_path;
+        }
+
         // $slug = Str::slug($form_data['title']);
         // $count = 1;
         // while (Post::where('slug', $slug)->first()) {
@@ -71,7 +78,6 @@ class PostController extends Controller
 
         // $form_data['slug'] = $slug;
         $form_data['slug'] = $this->getSlug($form_data["title"]);
-
         $new_post = new Post();
 
         $new_post->fill($form_data);
