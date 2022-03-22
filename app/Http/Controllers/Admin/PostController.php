@@ -13,6 +13,7 @@ class PostController extends Controller
     protected $validation = [
         'title' => 'required|max:255',
         'content' => 'required',
+        'category_id' => 'nullable|exists:categories,id',
     ];
 
     protected function getSlug($title = "", $id = "")
@@ -44,7 +45,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
