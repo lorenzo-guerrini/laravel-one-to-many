@@ -14,7 +14,8 @@
                     <th>ID</th>
                     <th class="col-3">Title - Slug</th>
                     <th class="col-2">Category</th>
-                    <th class="col-5">Content</th>
+                    <th class="col-1">Image</th>
+                    <th class="col-4">Content</th>
                     <th class="text-center col-2">Actions</th>
                 </tr>
             </thead>
@@ -22,17 +23,31 @@
             <tbody>
                 @foreach ($posts as $post)
                     <tr>
+                        {{-- ID --}}
                         <td>{{ $post->id }}</td>
 
+                        {{-- Tittle --}}
                         <td>
                             <div><strong>{{ $post->title }}</strong></div>
                             <div>({{ $post->slug }})</div>
                         </td>
 
+                        {{-- Category --}}
                         <td class="text-center">
-                            {{ $post->category ? $post->category->name : "/"}}
+                            {{ $post->category ? $post->category->name : '/' }}
                         </td>
 
+                        {{-- Image --}}
+                        <td class="text-center">
+                            @if (isset($post->image))
+                                <img style="width: 20px" src="{{ asset("storage/{$post->image}") }}"
+                                    alt="{{ $post->title }}">
+                            @else
+                                /
+                            @endif
+                        </td>
+
+                        {{-- Content --}}
                         <td>
                             {{ substr($post->content, 0, 150) }}
                             @if (strlen($post->content) > 150)
@@ -40,6 +55,7 @@
                             @endif
                         </td>
 
+                        {{-- Buttons --}}
                         <td class="text-center">
                             <a class="btn btn-primary btn-sm mb-1"
                                 href="{{ route('admin.posts.show', ['post' => $post->id]) }}">More Info</a>

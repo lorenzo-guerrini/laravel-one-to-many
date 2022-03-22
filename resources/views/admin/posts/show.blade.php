@@ -14,8 +14,21 @@
             <li><strong>ID: </strong>{{ $post->id }}</li>
             <li><strong>Title: </strong>{{ $post->title }}</li>
             <li><strong>Slug: </strong>{{ $post->slug }}</li>
+
+            @if ($post->category)
+                <li><strong>Category: </strong>{{ $post->category->name }}</li>
+            @endif
+
             <li><strong>Created at: </strong>{{ $post->created_at }}</li>
             <li><strong>Updated at: </strong>{{ $post->updated_at }}</li>
+
+            @if ($post->image)
+                <li>
+                    <strong>Image:</strong><br>
+                    <img class="img-fluid" src="{{ asset("storage/{$post->image}") }}" alt="{{ $post->title }}">
+                </li>
+            @endif
+
             <li><strong>Content: </strong><br>{{ $post->content }}</li>
         </ul>
     </div>
